@@ -10,6 +10,7 @@
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cvCard"
         android:layout_width="340dp"
         android:layout_height="500dp"
         app:layout_constraintBottom_toBottomOf="parent"

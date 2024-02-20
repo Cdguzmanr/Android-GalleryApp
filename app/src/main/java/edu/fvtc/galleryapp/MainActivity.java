@@ -29,12 +29,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             new Location("Manuel Antonio National Park", "Text")
     };
 
-    int[] imgs = {R.drawable.fortuna1,
-            R.drawable.fortuna2,
-            R.drawable.monteverde1,
-            R.drawable.monteverde2,
-            R.drawable.manuelantonio1,
-            R.drawable.manuelantonio2
+    int[][] imgs = {
+            {R.drawable.fortuna1, R.drawable.fortuna2},
+            {R.drawable.monteverde1, R.drawable.monteverde2},
+            {R.drawable.manuelantonio1, R.drawable.manuelantonio2}
     };
 
     int[] textfiles = {R.raw.fortuna,
@@ -48,8 +46,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     boolean isFront = true;
     ImageView imgCard;
     TextView tvCard;
+    View cvCard;
 
     GestureDetector gestureDetector;
+
 
     // End of initialization code ----------------------------------------------
 
@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         imgCard = findViewById(R.id.header_image);
         tvCard = findViewById(R.id.tvBody);
+        cvCard = findViewById(R.id.cvCard);
+
 
         updateToNextCard();
 
@@ -71,18 +73,23 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     // Important Methods
-    private void updateToNextCard()
-    {
+    private void updateToNextCard() {
         locations[cardNo].setDescription(readFile(textfiles[cardNo]));
 
-        isFront = true;
-        imgCard.setVisibility(View.VISIBLE);
-        imgCard.setImageResource(imgs[cardNo]);
-        tvCard.setText(locations[cardNo].getName());
+        if (isFront) {
+            // Front side of the card
+            imgCard.setVisibility(View.VISIBLE);
+            imgCard.setImageResource(imgs[cardNo][0]);
+            tvCard.setText(locations[cardNo].getName());
+        } else {
+            // Back side of the card
+            imgCard.setVisibility(View.VISIBLE);
+            imgCard.setImageResource(imgs[cardNo][1]);
+            tvCard.setText(locations[cardNo].getDescription());
+        }
     }
 
-    private String readFile(int fileId)
-    {
+    private String readFile(int fileId) {
         InputStream inputStream;
         InputStreamReader inputStreamReader;
         BufferedReader bufferedReader;
@@ -148,15 +155,31 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         try {
             if(isFront){
                 // Go to the back
+                cvCard.animate()
+                        .setDuration(500)  // Duration of the animation
+                        .rotationYBy(180)  // Rotate the card
+                        .withEndAction(new Runnable(){
+                            @Override
+                            public void run() {
+                                cvCard.setRotationY(0);  // Reset rotation
+                                updateToNextCard(); // update the card content
+                            }
+                        });
                 message = "Go to back";
-                imgCard.setVisibility(View.INVISIBLE);
-                tvCard.setText(locations[cardNo].getDescription());
             }
             else{
                 // got to front
+                cvCard.animate()
+                        .setDuration(500)  // Duration of the animation
+                        .rotationYBy(-180)  // Rotate the card
+                        .withEndAction(new Runnable(){
+                            @Override
+                            public void run() {
+                                cvCard.setRotationY(0);  // Reset rotation
+                                updateToNextCard(); // update the card content
+                            }
+                        });
                 message = "Go to front";
-                imgCard.setVisibility(View.VISIBLE);
-                tvCard.setText(locations[cardNo].getName());
             }
 
             isFront = !isFront;
@@ -199,8 +222,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             {
                 Animation move = AnimationUtils.loadAnimation(this, R.anim.moveright);
                 move.setAnimationListener(new AnimationListener());
-                imgCard.startAnimation(move);
-                tvCard.startAnimation(move);
+                cvCard.startAnimation(move); // Move the card instead of the items individually
                 // Swipe right
                 Log.d(TAG, "onFling: Right");
                 cardNo = (cardNo - 1 + numCards) % numCards;
@@ -208,8 +230,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             else {
                 Animation move = AnimationUtils.loadAnimation(this, R.anim.moveleft);
                 move.setAnimationListener(new AnimationListener());
-                imgCard.startAnimation(move);
-                tvCard.startAnimation(move);
+                cvCard.startAnimation(move);
                 // Swipe left
                 Log.d(TAG, "onFling: Left");
                 cardNo = (cardNo + 1) % numCards;

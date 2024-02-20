@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    <item
+        android:id="@+id/action_card1"
+        android:orderInCategory="100"
+        android:title="@string/la_fortuna"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_card2"
+        android:orderInCategory="100"
+        android:title="@string/monteverde"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_card3"
+        android:orderInCategory="100"
+        android:title="@string/manuel_antonio"
+        app:showAsAction="never"/>
+
+
+
+</menu>

@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -265,4 +267,37 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
     }
     // End of Gesture detection methods -------------------------------------------------------
+
+    // Menu Methods:
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected: " + item.getItemId());
+        switch (item.getItemId()) {
+            case 2131231218:
+                updateToCard(0); // Update to card 1
+                return true;
+            case 2131231219:
+                updateToCard(1); // Update to card 2
+                return true;
+            case 2131231220:
+                updateToCard(2); // Update to card 3
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void updateToCard(int cardIndex) {
+        // Adjust cardNo based on the selected menu item index
+        cardNo = cardIndex;
+        updateToNextCard(); // Update the card view
+    }
+
+
 }
